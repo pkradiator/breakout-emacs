@@ -240,6 +240,30 @@
   (gamegrid-kill-timer)
   (gamegrid-start-timer breakout-timer-delay 'breakout-update-game)
   (breakout-update-score))
+(defun breakout-pause ()
+  "Pause the game."
+  (interactive nil breakout-mode)
+  (gamegrid-kill-timer)
+  ;; Oooohhh ugly.  I don't know why, gamegrid-kill-timer don't do the
+  ;; jobs it is made for.  So I have to do it "by hand".  Anyway, next
+  ;; line is harmless.
+  (cancel-function-timers 'breakout-update-game)
+  (define-key breakout-mode-map breakout-resume-key 'breakout-resume))
+
+(defun breakout-resume ()
+  "Resume a paused game."
+  (interactive nil breakout-mode)
+  (define-key breakout-mode-map breakout-pause-key 'breakout-pause)
+  (gamegrid-start-timer breakout-timer-delay 'breakout-update-game))
+
+(defun breakout-quit ()
+  "Quit the game and kill the breakout buffer."
+  (interactive nil breakout-mode)
+  (gamegrid-kill-timer)
+  ;; Be sure not to draw things in another buffer and wait for some
+  ;; time.
+  (run-with-timer breakout-timer-delay nil 'kill-buffer breakout-buffer-name))
+
   
 (provide 'breakout)
 
