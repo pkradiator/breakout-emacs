@@ -264,6 +264,18 @@
   ;; time.
   (run-with-timer breakout-timer-delay nil 'kill-buffer breakout-buffer-name))
 
+
+(defun breakout ()
+  "Play breakout and waste time.
+This is an implementation of the classical game breakout.
+Move left, right and try to brack all the bricks.
+
+breakout-mode keybindings:\\<breakout-mode-map>
+
+\\{breakout-mode-map}"
+  (interactive)
+  (setq breakout-score 0)
+  (breakout-init))
   
 (provide 'breakout)
 
