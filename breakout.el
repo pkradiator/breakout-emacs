@@ -152,9 +152,9 @@
   breakout-quit-key  #'breakout-quit
   breakout-pause-key #'breakout-pause)
 
-(defvar-keymap pong-null-map
-  :doc "Null map for pong-mode."
-  :name 'pong-null-map)
+(defvar-keymap breakout-null-map
+  :doc "Null map for breakout-mode."
+  :name 'breakout-null-map)
 
 
 ;;; Fun stuff -- The code
