@@ -1,5 +1,8 @@
 ;;; breakout.el --- classical implementation of breakout  -*- lexical-binding:t -*-
 
+;; Author: Priyanshu Kalal <kalalpriyanshu7@gmail.com>
+;; Keywords: games
+
 ;;; Commentary:
 
 ;; This is an implementation of the classical game breakout.
@@ -280,4 +283,3 @@ breakout-mode keybindings:\\<breakout-mode-map>
 (provide 'breakout)
 
 ;;; breakout.el ends here
-(breakout-init-buffer)
