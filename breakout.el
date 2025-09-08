@@ -241,8 +241,50 @@
 
   (breakout-init-buffer)
   (gamegrid-kill-timer)
-  (gamegrid-start-timer breakout-timer-delay 'breakout-update-game)
-  (breakout-update-score))
+  (gamegrid-start-timer breakout-timer-delay 'breakout-update-game))
+
+(defun breakout-update-game (breakout-buffer)
+  "\"Main\" function for breakout.
+It is called every breakout-cycle-delay seconds and
+updates ball and bats positions.  It is responsible of collision
+detection and checks if the player scores."
+  (if (not (eq (current-buffer) breakout-buffer))
+      (breakout-pause)
+    (let ((old-x breakout-x)
+	  (old-y breakout-y)
+	  (wall-top 0)
+	  (wall-bot (- breakout-height 1))
+	  (wall-left 0)
+	  (wall-right (- breakout-width 1))
+	  (bat-line (- breakout-height 3))
+	  (old-yy breakout-yy)
+	  (old-xx breakout-xx))
+      (gamegrid-set-cell old-x old-y breakout-blank)
+      (if (or (= (+ old-y old-yy) wall-top)
+	      (= (+ old-y old-yy) wall-bot)
+	      (and (= (+ old-y old-yy) bat-line)
+		   (and (>= (+ old-x old-xx) breakout-bat-pos)
+			(< (+ old-x old-xx) (+ breakout-bat-pos breakout-bat-width)))))
+	  (progn
+	    (setq breakout-yy (* -1 breakout-yy))
+	    (when (and (= (+ old-y old-yy) bat-line)
+		       (and (>= (+ old-x old-xx) breakout-bat-pos)
+			    (< (+ old-x old-xx) (+ breakout-bat-pos breakout-bat-width))))
+	      (let ((bat-mid (+ breakout-bat-pos (/ breakout-bat-width 2)))
+		    (ball-pos-tb (+ old-x old-xx)))
+		(cond
+		 ((> ball-pos-tb bat-mid) (setq breakout-xx 1))
+		 ((< ball-pos-tb bat-mid) (setq breakout-xx -1))
+		 ((= ball-pos-tb bat-mid) (setq breakout-xx 0)))))
+	    ))
+      (if (or (= (+ old-x breakout-xx) wall-left)
+	      (= (+ old-x breakout-xx) wall-right))
+	  (progn
+	    (setq breakout-xx (* -1 breakout-xx))))
+      (setq breakout-x (+ old-x breakout-xx) breakout-y (+ old-y breakout-yy))
+      (gamegrid-set-cell breakout-x breakout-y breakout-ball)
+      )))
+
 (defun breakout-pause ()
   "Pause the game."
   (interactive nil breakout-mode)
